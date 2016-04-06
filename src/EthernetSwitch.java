@@ -22,7 +22,7 @@ public class EthernetSwitch {
 
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
-		frame.add(tablePanel, BorderLayout.CENTER);
+		frame.add(tablePanel, BorderLayout.NORTH);
 
 		JScrollPane pane = new JScrollPane(table);
 		tablePanel.add(pane, BorderLayout.CENTER);
@@ -31,6 +31,9 @@ public class EthernetSwitch {
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 		table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
 		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
+		
+		JPanel resultPanel = new JPanel();
+		frame.add(resultPanel,BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
 		frame.add(buttonPanel, BorderLayout.SOUTH);
