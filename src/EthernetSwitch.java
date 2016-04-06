@@ -82,7 +82,8 @@ public class EthernetSwitch {
 								resultLabel.setText(
 										"The frame was forwarded to port " + table.getModel().getValueAt(i, 0));
 								found = true;
-							} else if (!portString.equals(table.getModel().getValueAt(i, 0).toString())) {
+							} else if (!portString.equals(table.getModel().getValueAt(i, 0).toString())
+									&& "   -E M P T Y-   ".equals(table.getModel().getValueAt(i, 1).toString())) {
 								unknownPorts += table.getModel().getValueAt(i, 0) + " ";
 							}
 						}
