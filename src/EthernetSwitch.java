@@ -28,19 +28,23 @@ public class EthernetSwitch {
 		tablePanel.add(pane, BorderLayout.CENTER);
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-		table.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
-		
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+
 		JPanel resultPanel = new JPanel();
-		frame.add(resultPanel,BorderLayout.CENTER);
-		
+		frame.add(resultPanel, BorderLayout.CENTER);
+
+		JLabel resultLabel = new JLabel(" ");
+		resultPanel.add(resultLabel);
+
 		JPanel buttonPanel = new JPanel();
 		frame.add(buttonPanel, BorderLayout.SOUTH);
 
 		JButton updateButton = new JButton("Update");
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
+
 				String portString;
 				int incomingPort = 0;
 				do {
@@ -71,16 +75,33 @@ public class EthernetSwitch {
 				do {
 					destinationAddress = JOptionPane.showInputDialog(frame, "What is the destination MAC address.");
 					if (destinationAddress.length() == 6) {
+						boolean found = false;
+						String unknownPorts = "";
+						for (int i = 0; i < table.getModel().getRowCount(); i++) {
+							if (destinationAddress.equals(table.getModel().getValueAt(i, 1))) {
+								resultLabel.setText(
+										"The frame was forwarded to port " + table.getModel().getValueAt(i, 0));
+								found = true;
+							} else if (!portString.equals(table.getModel().getValueAt(i, 0).toString())) {
+								unknownPorts += table.getModel().getValueAt(i, 0) + " ";
+							}
+						}
+						if (!found) {
+							resultLabel.setText("The frame was broadcasted to ports: " + unknownPorts);
+							frame.pack();
+						}
+
 						break;
 					} else {
 						JOptionPane.showMessageDialog(frame, "The MAC address should be exactly 6 characters long.");
 					}
 				} while (destinationAddress != null);
 				if (incomingPort > 0 && senderAddress.length() == 6 && destinationAddress.length() == 6) {
-					table.getModel().setValueAt(senderAddress + "" + destinationAddress, incomingPort - 1, 1);
+					table.getModel().setValueAt(senderAddress, incomingPort - 1, 1);
 				}
 			}
 		});
+
 		buttonPanel.add(updateButton);
 
 		JButton clearButton = new JButton("Clear");
@@ -89,6 +110,8 @@ public class EthernetSwitch {
 				for (int i = 0; i < table.getRowCount(); i++) {
 					table.getModel().setValueAt("   -E M P T Y-   ", i, 1);
 				}
+				resultLabel.setText("The table has been cleared");
+				frame.pack();
 			}
 		});
 		buttonPanel.add(clearButton);
